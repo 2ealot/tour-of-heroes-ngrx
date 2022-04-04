@@ -1,6 +1,4 @@
 import { Hero } from './hero';
-import { Injectable } from '@angular/core';
-import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import { Action } from '@ngrx/store';
 
 export const ADD_HERO = 'ADD_HERO';

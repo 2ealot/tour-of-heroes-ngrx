@@ -21,7 +21,7 @@ export class HeroesComponent implements OnInit {
 
   getHeroes(): void {
     this.store.select(selectAllHeroes).subscribe(heroes=>{
-    this.heroes = heroes;
+      this.heroes = heroes;
     });
   }
 

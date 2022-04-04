@@ -15,7 +15,7 @@ import { Observable } from 'rxjs';
   styleUrls: [ './hero-detail.component.css' ]
 })
 export class HeroDetailComponent implements OnInit, OnDestroy {
-  @Input() hero: Hero;
+  hero: Hero;
   hero$: Observable<Hero>;
 
   constructor(
@@ -39,7 +39,8 @@ export class HeroDetailComponent implements OnInit, OnDestroy {
       //.subscribe(hero => this.hero = hero);
 
     this.store.select(selectAllHeroes).subscribe(heroes=>{
-      this.hero = heroes.find(hero => hero.id == id);
+      const heroFound = heroes.find(hero => hero.id == id);
+      this.hero = { ...heroFound };
     });
 
     /*this.store.dispatch(new heroActions.SelectHero(id));

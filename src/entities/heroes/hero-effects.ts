@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-// import { ofAction } from 'ngrx-actions';
 import {Action, Store} from '@ngrx/store';
-import {Effect, Actions, createEffect, ofType} from '@ngrx/effects';
+import {Actions, createEffect, ofType} from '@ngrx/effects';
 import * as heroActions from './hero-actions';
 import { map, switchMap, catchError } from 'rxjs/operators';
 import { HeroService } from '../../app/hero.service';
@@ -18,19 +17,6 @@ export class HeroEffects {
     private heroService: HeroService,
     private messageService: MessageService) {}
 
-// @Effect()
-// addHero$ = this.update$.pipe(
-//   ofAction(heroActions.AddHero),
-//   switchMap(hero => this.heroService.addHero(hero.payload)),
-//   map(response => {
-//     this.messageService.add("Adding hero to the store.");
-//     return new heroActions.AddHeroSuccess(response);
-//     },
-//   catchError(error => error.subscribe().switchMap(error =>{
-//     console.log(error)
-//   }))));
-
-
 addHero$: Observable<Action> = createEffect(() =>
     this.update$.pipe(
         ofType<heroActions.AddHero>(ADD_HERO),
@@ -46,15 +32,6 @@ addHero$: Observable<Action> = createEffect(() =>
     ),
 );
 
-// @Effect()
-// getHeroes$ = this.update$.pipe(
-//   ofAction(heroActions.GetHeroes),
-//   switchMap(hero => this.heroService.getHeroes()),
-//   map(response => {
-//     this.messageService.add("Populating store with heroes.");
-//     return new heroActions.GetHeroesSuccess(response);
-//     }));
-
 getHeroes$: Observable<Action> = createEffect(() =>
     this.update$.pipe(
         ofType<heroActions.GetHeroes>(GET_HEROES),
@@ -64,15 +41,6 @@ getHeroes$: Observable<Action> = createEffect(() =>
             return new heroActions.GetHeroesSuccess(response as Hero[]);
         })));
 
-// @Effect()
-// updateHero$ = this.update$.pipe(
-//   ofAction(heroActions.UpdateHero),
-//   switchMap(hero => this.heroService.updateHero(hero.payload)),
-//   map(response => {
-//     this.messageService.add("Updating hero in the store.");
-//     return new heroActions.UpdateHeroSuccess(response);
-//     }));
-
 updateHero$: Observable<Action> = createEffect(() =>
     this.update$.pipe(
         ofType<heroActions.UpdateHero>(UPDATE_HERO),
@@ -81,15 +49,6 @@ updateHero$: Observable<Action> = createEffect(() =>
             this.messageService.add("Updating hero in the store.");
             return new heroActions.UpdateHeroSuccess(response as Hero);
         })));
-
-// @Effect()
-// deleteHero$ = this.update$.pipe(
-//   ofAction(heroActions.DeleteHero),
-//   switchMap(hero => this.heroService.deleteHero(hero.payload)),
-//   map(response => {
-//     this.messageService.add("Deleting hero in the store.");
-//     return new heroActions.DeleteHeroSuccess(response);
-//     }));
 
 deleteHero$: Observable<Action> = createEffect(() =>
     this.update$.pipe(

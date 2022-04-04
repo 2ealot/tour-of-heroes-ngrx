@@ -1,19 +1,16 @@
-import { createEntityAdapter, EntityState, EntityAdapter } from '@ngrx/entity';
-import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { createSelector, MemoizedSelector } from '@ngrx/store';
 import { Hero } from './hero';
 import * as heroActions from './hero-actions';
 
-export interface HeroState extends EntityState<Hero> {
+export interface HeroState {
   selectedHeroId: number | null;
- }
+  heroes: Hero[] | null;
+}
 
-const heroAdapter = createEntityAdapter<Hero>({
-    selectId: (hero: Hero) => hero.id
-});
-
-const heroInitialState: HeroState = heroAdapter.getInitialState({
-    selectedHeroId: null
-});
+const heroInitialState: HeroState = {
+    selectedHeroId: null,
+    heroes: [],
+};
 
 export function heroReducer(
   state: HeroState = heroInitialState,
@@ -22,14 +19,31 @@ export function heroReducer(
   console.log(action.type);
   switch (action.type) {
     case heroActions.ADD_HERO_SUCCESS:
-      return heroAdapter.addOne(action.payload, state);
+        return {
+            ...state,
+            heroes: [...state.heroes, action.payload],
+        };
     case heroActions.GET_HEROES_SUCCESS:
-      // return heroAdapter.addAll(action.payload, state);
-      return heroAdapter.addMany(action.payload, state);
+        return {
+            ...state,
+            heroes: action.payload,
+        };
     case heroActions.UPDATE_HERO_SUCCESS:
-      return heroAdapter.updateOne(action.payload, state);
+        const updatedHero = state.heroes.map((hero: Hero) => {
+            if(hero.id === action.payload.id) {
+                return action.payload;
+            }
+            return hero;
+        });
+        return {
+            ...state,
+            heroes: updatedHero,
+        };
     case heroActions.DELETE_HERO_SUCCESS:
-      return heroAdapter.removeOne(action.payload, state);
+        return {
+            ...state,
+            heroes: state.heroes.filter((hero) => hero.id !== action.payload),
+        };
     case heroActions.SELECT_HERO:
       state.selectedHeroId = action.payload;
       return state;
@@ -38,15 +52,12 @@ export function heroReducer(
   }
 }
 
-export const selectHeroState = createFeatureSelector<HeroState>('heroes');
 
-export const { selectAll: selectAllHeroes, selectIds } = heroAdapter.getSelectors(
-  selectHeroState
+export const selectAllHeroes = (appState) => appState.heroes.heroes;
+export const getSelectedHeroId = (appState) => appState.heroes.selectedHeroId;
+
+export const getSelectedHero: MemoizedSelector<HeroState, Hero> = createSelector(
+    selectAllHeroes,
+    getSelectedHeroId,
+    (heroes: Hero[], heroId: number) => heroes.find((hero: Hero) => hero.id === heroId),
 );
-
-export const getSelectedHero = createSelector(
-    selectHeroState,
-    (state) => {
-      return state.entities[state.selectedHeroId];
-    }
-)

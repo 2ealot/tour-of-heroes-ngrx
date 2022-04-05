@@ -20,7 +20,7 @@ export class DashboardComponent implements OnInit {
 
   getHeroes(): void {
     this.store.select(selectAllHeroes).subscribe(heroes=>{
-    this.heroes = heroes.slice(0,4);
+      this.heroes = heroes.slice(0,4);
     });
   }
 }

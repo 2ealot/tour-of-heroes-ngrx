@@ -6,7 +6,7 @@ import { Hero }         from '../../entities/heroes/hero';
 import { HeroService }  from '../hero.service';
 import { Store } from '@ngrx/store';
 import * as heroActions from '../../entities/heroes/hero-actions';
-import { selectAllHeroes, getSelectedHero } from '../../entities/heroes/hero-reducer';
+import { getSelectedHero } from '../../entities/heroes/hero-reducer';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -35,17 +35,12 @@ export class HeroDetailComponent implements OnInit, OnDestroy {
 
   getHero(): void {
     const id = +this.route.snapshot.paramMap.get('id');
-    //this.heroService.getHero(id)
-      //.subscribe(hero => this.hero = hero);
 
-    this.store.select(selectAllHeroes).subscribe(heroes=>{
-      const heroFound = heroes.find(hero => hero.id == id);
-      this.hero = { ...heroFound };
-    });
-
-    /*this.store.dispatch(new heroActions.SelectHero(id));
+    this.store.dispatch(new heroActions.SelectHero(id));
     this.hero$ = this.store.select(getSelectedHero);
-    this.hero$.subscribe(hero => this.hero = hero);*/
+    this.hero$.subscribe(hero => {
+      this.hero = { ...hero };
+    });
   }
 
   goBack(): void {
@@ -55,8 +50,6 @@ export class HeroDetailComponent implements OnInit, OnDestroy {
  save(): void {
    this.store.dispatch(new heroActions.UpdateHero(this.hero));
    this.goBack();
-    //this.heroService.updateHero(this.hero)
-    //.subscribe(() => this.goBack());
   }
 }
 

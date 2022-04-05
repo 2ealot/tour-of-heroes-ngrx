@@ -45,19 +45,27 @@ export function heroReducer(
             heroes: state.heroes.filter((hero) => hero.id !== action.payload),
         };
     case heroActions.SELECT_HERO:
-      state.selectedHeroId = action.payload;
-      return state;
+        return {
+            ...state,
+            selectedHeroId: action.payload,
+        };
     default:
       return state;
   }
 }
 
 
-export const selectAllHeroes = (appState) => appState.heroes.heroes;
-export const getSelectedHeroId = (appState) => appState.heroes.selectedHeroId;
+export const selectAllHeroes = (appState) => {
+    return appState.heroes.heroes;
+}
+export const getSelectedHeroId = (appState) => {
+    return appState.heroes.selectedHeroId;
+}
 
 export const getSelectedHero: MemoizedSelector<HeroState, Hero> = createSelector(
     selectAllHeroes,
     getSelectedHeroId,
-    (heroes: Hero[], heroId: number) => heroes.find((hero: Hero) => hero.id === heroId),
+    (heroes: Hero[], heroId: number) => {
+        return heroes.find((hero: Hero) => hero.id === heroId);
+    },
 );
